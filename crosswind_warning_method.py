@@ -2,7 +2,7 @@ import math
 
 #WEATHER PARAMETERS
 windVelocity = 33.3
-windAngle = 180
+windAngle = 130
 totalAirPressure = 983.0
 temperature = 18.0
 humidity = 0.1
@@ -45,14 +45,23 @@ def computeAtanX():
 def computeVehAngle():
     rawAtan = math.atan2(computeAtanY(), computeAtanX())
     return toDegrees(rawAtan)
-
+    
 #COMPUTING OTHER ANGLES
 def angleWindVeh():
     return 180 - (computeVehAngle() - windAngle)
-
-def computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh):
-    angle = math.atan(windVelocity * math.sin(angleWindVeh()) / (vehVelocity + windVelocity * math.cos(angleWindVeh())))
-    return toDegrees(angle) #return angle from -pi/2 to pi/2 range
+    
+def computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle):
+    aeroAngle = math.atan(windVelocity * math.sin(toRadians(angleWindVeh())) / (vehVelocity + windVelocity * math.cos(toRadians(angleWindVeh()))))
+    if windAngle <= computeVehAngle() or windAngle >= computeVehAngle() + 180:
+        if toDegrees(aeroAngle) >= 0:
+            return toDegrees(aeroAngle)
+        else:
+            return 90 - toDegrees(aeroAngle)
+    else:
+        if toDegrees(aeroAngle) >= 0:
+            return 180 + toDegrees(aeroAngle)
+        else:
+            return 270 - toDegrees(aeroAngle)
 
 #AIR DENSITY
 def computeVaporPresure(humidity, temperature):
@@ -80,6 +89,49 @@ def computeHightGravity(computeFrontGravity, distanceAxles, totalWeight, scaleWe
     return ((scaleWeight * distanceAxles - totalWeight * dist) / (totalWeight * inclination)) + wheelRadius
 
 #AERODYNAMIC BAKER's COEFFICIENTS (1988)
+def computeSideCoe(computeAeroAngle):
+    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
+    if angle > 0 and angle <= 90:
+        return 5.2 * math.sin(toRadians(angle))
+    elif angle > 90 and angle <= 180:
+        return 5.2 * math.sin(toRadians(180 - angle))
+    elif angle > 180 and angle <= 270:
+        return -5.2 * math.sin(toRadians(angle - 180))
+    elif angle > 270 and angle <= 360:
+        return -5.2 * math.sin(toRadians(360 - angle))
+
+def computeLiftCoe(computeAeroAngle):
+    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
+    if angle > 0 and angle <= 90:
+        return 1.1 * (1 - math.cos(4 * toRadians(angle)))
+    elif angle > 90 and angle <= 180:
+        return 1.1 * (1 - math.cos(4 * toRadians(180 - angle)))
+    elif angle > 180 and angle <= 270:
+        return 1.1 * (1 - math.cos(4 * toRadians(angle - 180)))
+    elif angle > 270 and angle <= 360:
+        return 1.1 * (1 - math.cos(4 * toRadians(360 - angle)))
+
+def computeDragCoe(computeAeroAngle):
+    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
+    if angle > 0 and angle <= 90:
+        return -0.5 * (1 + math.sin(toRadians(3 * angle)))
+    elif angle > 90 and angle <= 180:
+        return 0.5 * (1 + math.sin(toRadians(3 * (180 - angle))))
+    elif angle > 180 and angle <= 270:
+        return 0.5 * (1 + math.sin(toRadians(3 * (angle - 180))))
+    elif angle > 270 and angle <= 360:
+        return -0.5 * (1 + math.sin(toRadians(3 * (360 - angle))))
+
+def computePitchingCoe(computeAeroAngle):
+    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
+    if angle > 0 and angle <= 90:
+        return -2 * (1 - math.cos(toRadians(2 * angle)))
+    elif angle > 90 and angle <= 180:
+        return 2 * (1 - math.cos(toRadians(2 * (180 - angle))))
+    elif angle > 180 and angle <= 270:
+        return 2 * (1 - math.cos(toRadians(2 * (angle - 180))))
+    elif angle > 270 and angle <= 360:
+        return -2 * (1 - math.cos(toRadians(2 * (360 - angle))))
 
 #CALCULATORS OF UNITS
 def toDegrees(num):
@@ -90,4 +142,3 @@ def toRadians(num):
 
 def toKelvin(temp):
     return temp + 273.15
-
