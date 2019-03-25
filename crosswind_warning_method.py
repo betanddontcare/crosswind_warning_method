@@ -1,15 +1,17 @@
 import math
 
 #WEATHER PARAMETERS
-windVelocity = 33.3
-windAngle = 130
+windVelocity = 18
+windAngle = 45
 totalAirPressure = 983.0
 temperature = 18.0
 humidity = 0.1
+isRainy = False
 
 #TERRAIN PARAMETERS
 terrRoughCoe = 0.05
 altidude = 100
+rollingResistanceCoe = 0.014
 
 #VEHCICLE PARAMETERS
 vehVelocity = 13.88
@@ -132,6 +134,63 @@ def computePitchingCoe(computeAeroAngle):
         return 2 * (1 - math.cos(toRadians(2 * (angle - 180))))
     elif angle > 270 and angle <= 360:
         return -2 * (1 - math.cos(toRadians(2 * (360 - angle))))
+    
+#FORCES AND MOMENTS
+#Newton unit!
+def dragForce(computeDragCoe, frontArea, computeAirDensity, appWindVelocity):
+    airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
+    dragCoe = computeDragCoe(computeAeroAngle)
+    appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
+    return (dragCoe * frontArea * airDensity * (appWindVel ** 2)) / 2
+
+def liftForce(computeLiftCoe, frontArea, computeAirDensity, appWindVelocity):
+    airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
+    liftCoe = computeLiftCoe(computeAeroAngle)
+    appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
+    return (liftCoe * frontArea * airDensity * (appWindVel ** 2)) / 2
+
+def pitchingMoment(computePitchingCoe, computeHightGravity, frontArea, computeAirDensity, appWindVelocity):
+    airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
+    pitchCoe = computePitchingCoe(computeAeroAngle)
+    appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
+    height = computeHightGravity(computeFrontGravity, distanceAxles, totalWeight, scaleWeight, angleOfInclination, wheelRadius)
+    return (pitchCoe * frontArea * airDensity * height * (appWindVel ** 2)) / 2
+
+#TRACTION PARAMETERS
+def traction(computeFrontGravity, computeRearGravity, dragForce, rollingResistanceCoe, liftForce, computeHightGravity, pitchingMoment, totalWeight):
+    a = computeFrontGravity(rearAxleLoad, distanceAxles, totalWeight)
+    b = computeRearGravity(computeFrontGravity, distanceAxles)
+    h = computeHightGravity(computeFrontGravity, distanceAxles, totalWeight, scaleWeight, angleOfInclination, wheelRadius)
+    drag = dragForce(computeDragCoe, frontArea, computeAirDensity, appWindVelocity)
+    lift = liftForce(computeLiftCoe, frontArea, computeAirDensity, appWindVelocity)
+    pitching = pitchingMoment(computePitchingCoe, computeHightGravity, frontArea, computeAirDensity, appWindVelocity)
+    return ((a + b) * (drag + rollingResistanceCoe * (totalWeight * 1000 * 9.81 - lift))) / ((b + a) * (totalWeight * 1000 - lift))
+
+def staticFriction(isRainy):
+    if isRainy:
+        return 0.35
+    else:
+        return 0.75
+
+def computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction):
+    q = traction(computeFrontGravity, computeRearGravity, dragForce, rollingResistanceCoe, liftForce, computeHightGravity, pitchingMoment, totalWeight)
+    static = staticFriction(isRainy)
+    return math.sqrt(static ** 2 - ((q - rollingResistanceCoe) ** 2))
+
+#COMPUTING FINAL VELOCITIES
+def appWindVelocity(vehVelocity, windVelocity, angleWindVeh):
+    angle = angleWindVeh()
+    return math.sqrt(((windVelocity + windVelocity * math.cos(toRadians(angle))) ** 2) + (windVelocity * math.sin(toRadians(angle))))
+
+def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe):
+    static = computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction)
+    a = computeFrontGravity(rearAxleLoad, distanceAxles, totalWeight)
+    b = computeRearGravity(computeFrontGravity, distanceAxles)
+    side = computeSideCoe(computeAeroAngle)
+    lift = computeLiftCoe(computeAeroAngle)
+    airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
+    print(static, a, b, side, lift, airDensity, totalWeight, frontArea)
+    print(math.sqrt((2 * totalWeight * 1000 * 9.81 * static * (a + b)) / ((frontArea * airDensity) * ((a + b) * side + static * lift * (a + b)))))
 
 #CALCULATORS OF UNITS
 def toDegrees(num):
