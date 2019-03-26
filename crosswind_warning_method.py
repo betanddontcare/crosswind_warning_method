@@ -1,8 +1,9 @@
 import math
+from sympy import *
 
 #WEATHER PARAMETERS
 windVelocity = 18
-windAngle = 45
+windAngle = 180
 totalAirPressure = 983.0
 temperature = 18.0
 humidity = 0.1
@@ -17,16 +18,19 @@ rollingResistanceCoe = 0.014
 vehVelocity = 13.88
 frontArea = 11
 distanceAxles = 5
-totalWeight = 10
-frontAxleLoad = 3
-rearAxleLoad = 7
-scaleWeight = 7
+totalWeight = 5
+frontAxleLoad = 1
+rearAxleLoad = 4
+scaleWeight = 4
 angleOfInclination = 30
 wheelRadius = 0.5
 
 #LOCATION PARAMETERS
 p1 = [22, 23]
 p2 = [21, 24]
+
+#OTHER VARIABLES
+pi = math.pi
 
 #GUST VELOCITY
 def computeGustVelocity(windVelocity, altidude, terrRoughCoe):
@@ -92,48 +96,48 @@ def computeHightGravity(computeFrontGravity, distanceAxles, totalWeight, scaleWe
 
 #AERODYNAMIC BAKER's COEFFICIENTS (1988)
 def computeSideCoe(computeAeroAngle):
-    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
-    if angle > 0 and angle <= 90:
-        return 5.2 * math.sin(toRadians(angle))
-    elif angle > 90 and angle <= 180:
-        return 5.2 * math.sin(toRadians(180 - angle))
-    elif angle > 180 and angle <= 270:
-        return -5.2 * math.sin(toRadians(angle - 180))
-    elif angle > 270 and angle <= 360:
-        return -5.2 * math.sin(toRadians(360 - angle))
+    angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
+    if angle > 0 and angle <= pi / 2:
+        return 5.2 * math.sin(angle)
+    elif angle > pi / 2 and angle <= pi:
+        return 5.2 * math.sin(pi - angle)
+    elif angle > pi and angle <= 3 * pi / 2:
+        return -5.2 * math.sin(angle - pi)
+    elif angle > 3 * pi / 2 and angle <= 2 * pi:
+        return -5.2 * math.sin(2 * pi - angle)
 
 def computeLiftCoe(computeAeroAngle):
-    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
-    if angle > 0 and angle <= 90:
-        return 1.1 * (1 - math.cos(4 * toRadians(angle)))
-    elif angle > 90 and angle <= 180:
-        return 1.1 * (1 - math.cos(4 * toRadians(180 - angle)))
-    elif angle > 180 and angle <= 270:
-        return 1.1 * (1 - math.cos(4 * toRadians(angle - 180)))
-    elif angle > 270 and angle <= 360:
-        return 1.1 * (1 - math.cos(4 * toRadians(360 - angle)))
+    angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
+    if angle > 0 and angle <= pi / 2:
+        return 1.1 * (1 - trigsimp(cos(angle) ** 4))          
+    elif angle > pi / 2 and angle <= pi:
+        return 1.1 * (1 - trigsimp(cos(pi - angle) ** 4)) 
+    elif angle > pi and angle <= 3 * pi / 2:
+        return 1.1 * (1 - trigsimp(cos(angle - pi) ** 4)) 
+    elif angle > 3 * pi / 2 and angle <= 2 * pi:
+        return 1.1 * (1 - trigsimp(cos(2 * pi - angle) ** 4)) 
 
 def computeDragCoe(computeAeroAngle):
-    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
-    if angle > 0 and angle <= 90:
-        return -0.5 * (1 + math.sin(toRadians(3 * angle)))
-    elif angle > 90 and angle <= 180:
-        return 0.5 * (1 + math.sin(toRadians(3 * (180 - angle))))
-    elif angle > 180 and angle <= 270:
-        return 0.5 * (1 + math.sin(toRadians(3 * (angle - 180))))
-    elif angle > 270 and angle <= 360:
-        return -0.5 * (1 + math.sin(toRadians(3 * (360 - angle))))
+    angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
+    if angle > 0 and angle <= pi / 2:
+        return -0.5 * (1 + trigsimp(sin(angle) ** 3))
+    elif angle > pi / 2 and angle <= pi:
+        return 0.5 * (1 + trigsimp(sin(pi - angle) ** 3))
+    elif angle > pi and angle <= 3 * pi / 2:
+        return 0.5 * (1 + trigsimp(sin(angle - pi) ** 3))
+    elif angle > 3 * pi / 2 and angle <= 2 * pi:
+        return -0.5 * (1 + trigsimp(sin(2 * pi - angle) ** 3))
 
 def computePitchingCoe(computeAeroAngle):
-    angle = computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle)
-    if angle > 0 and angle <= 90:
-        return -2 * (1 - math.cos(toRadians(2 * angle)))
-    elif angle > 90 and angle <= 180:
-        return 2 * (1 - math.cos(toRadians(2 * (180 - angle))))
-    elif angle > 180 and angle <= 270:
-        return 2 * (1 - math.cos(toRadians(2 * (angle - 180))))
-    elif angle > 270 and angle <= 360:
-        return -2 * (1 - math.cos(toRadians(2 * (360 - angle))))
+    angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
+    if angle > 0 and angle <= pi / 2:
+        return -2 * (1 - trigsimp(cos(angle) ** 2))
+    elif angle > pi / 2 and angle <= pi:
+        return 2 * (1 - trigsimp(cos(pi - angle) ** 2))
+    elif angle > pi and angle <= 3 * pi / 2:
+        return 2 * (1 - trigsimp(cos(angle - pi) ** 2))
+    elif angle > 3 * pi / 2 and angle <= 2 * pi:
+        return -2 * (1 - trigsimp(cos(2 * pi - angle) ** 2))
     
 #FORCES AND MOMENTS
 #Newton unit!
@@ -177,11 +181,11 @@ def computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction):
     static = staticFriction(isRainy)
     return math.sqrt(static ** 2 - ((q - rollingResistanceCoe) ** 2))
 
-#COMPUTING FINAL VELOCITIES
+#COMPUTING SLIDESLIP VELOCITY
 def appWindVelocity(vehVelocity, windVelocity, angleWindVeh):
     angle = angleWindVeh()
     return math.sqrt(((windVelocity + windVelocity * math.cos(toRadians(angle))) ** 2) + (windVelocity * math.sin(toRadians(angle))))
-
+    
 def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe):
     static = computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction)
     a = computeFrontGravity(rearAxleLoad, distanceAxles, totalWeight)
@@ -189,7 +193,7 @@ def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, fr
     side = computeSideCoe(computeAeroAngle)
     lift = computeLiftCoe(computeAeroAngle)
     airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
-    print(static, a, b, side, lift, airDensity, totalWeight, frontArea)
+    print(static, a, b, side, lift, rollingResistanceCoe)
     print(math.sqrt((2 * totalWeight * 1000 * 9.81 * static * (a + b)) / ((frontArea * airDensity) * ((a + b) * side + static * lift * (a + b)))))
 
 #CALCULATORS OF UNITS
