@@ -2,8 +2,8 @@ import math
 from sympy import *
 
 #WEATHER PARAMETERS
-windVelocity = 18
-windAngle = 180
+windVelocity = 40
+windAngle = 130
 totalAirPressure = 983.0
 temperature = 18.0
 humidity = 0.1
@@ -143,19 +143,19 @@ def computePitchingCoe(computeAeroAngle):
 #Newton unit!
 def dragForce(computeDragCoe, frontArea, computeAirDensity, appWindVelocity):
     airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
-    dragCoe = computeDragCoe(computeAeroAngle)
+    dragCoe = abs(computeDragCoe(computeAeroAngle))
     appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
     return (dragCoe * frontArea * airDensity * (appWindVel ** 2)) / 2
 
 def liftForce(computeLiftCoe, frontArea, computeAirDensity, appWindVelocity):
     airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
-    liftCoe = computeLiftCoe(computeAeroAngle)
+    liftCoe = abs(computeLiftCoe(computeAeroAngle))
     appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
     return (liftCoe * frontArea * airDensity * (appWindVel ** 2)) / 2
 
 def pitchingMoment(computePitchingCoe, computeHightGravity, frontArea, computeAirDensity, appWindVelocity):
     airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
-    pitchCoe = computePitchingCoe(computeAeroAngle)
+    pitchCoe = abs(computePitchingCoe(computeAeroAngle))
     appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
     height = computeHightGravity(computeFrontGravity, distanceAxles, totalWeight, scaleWeight, angleOfInclination, wheelRadius)
     return (pitchCoe * frontArea * airDensity * height * (appWindVel ** 2)) / 2
@@ -168,7 +168,7 @@ def traction(computeFrontGravity, computeRearGravity, dragForce, rollingResistan
     drag = dragForce(computeDragCoe, frontArea, computeAirDensity, appWindVelocity)
     lift = liftForce(computeLiftCoe, frontArea, computeAirDensity, appWindVelocity)
     pitching = pitchingMoment(computePitchingCoe, computeHightGravity, frontArea, computeAirDensity, appWindVelocity)
-    return ((a + b) * (drag + rollingResistanceCoe * (totalWeight * 1000 * 9.81 - lift))) / ((b + a) * (totalWeight * 1000 - lift))
+    return ((a + b) * (drag + rollingResistanceCoe * (totalWeight * 1000 * 9.81 - lift))) / ((b + a) * (totalWeight * 1000 * 9.81 - lift))
 
 def staticFriction(isRainy):
     if isRainy:
@@ -190,11 +190,18 @@ def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, fr
     static = computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction)
     a = computeFrontGravity(rearAxleLoad, distanceAxles, totalWeight)
     b = computeRearGravity(computeFrontGravity, distanceAxles)
-    side = computeSideCoe(computeAeroAngle)
-    lift = computeLiftCoe(computeAeroAngle)
+    side = abs(computeSideCoe(computeAeroAngle))
+    lift = abs(computeLiftCoe(computeAeroAngle))
     airDensity = computeAirDensity(computeDryAirPressure, computeVaporPresure, temperature, totalAirPressure, humidity)
-    print(static, a, b, side, lift, rollingResistanceCoe)
-    print(math.sqrt((2 * totalWeight * 1000 * 9.81 * static * (a + b)) / ((frontArea * airDensity) * ((a + b) * side + static * lift * (a + b)))))
+    return math.sqrt((2 * totalWeight * 1000 * 9.81 * static * (a + b)) / ((frontArea * airDensity) * ((a + b) * side + static * lift * (a + b))))
+
+def velocitiesRatio(appWindVelocity, computeSlideSlipVel):
+    appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
+    slideslipVel = computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe)
+    if appWindVel / slideslipVel >= 1:
+        print('ALERT! You might loss stability!', round(appWindVel / slideslipVel, 2))
+    else:
+        print('YOU\'RE SAFE!', round(appWindVel / slideslipVel, 2))
 
 #CALCULATORS OF UNITS
 def toDegrees(num):
@@ -205,3 +212,5 @@ def toRadians(num):
 
 def toKelvin(temp):
     return temp + 273.15
+
+velocitiesRatio(appWindVelocity, computeSlideSlipVel)
