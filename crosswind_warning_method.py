@@ -1,13 +1,15 @@
 import math
+from getWeather import *
 from sympy import *
+weatherVars = getVars(lat, lon)
 
 #WEATHER PARAMETERS
-windVelocity = 40
-windAngle = 130
-totalAirPressure = 983.0
-temperature = 18.0
-humidity = 0.1
-isRainy = False
+windVelocity = weatherVars[3]
+windAngle = weatherVars[4]
+totalAirPressure = weatherVars[1]
+temperature = weatherVars[0]
+humidity = weatherVars[2]
+isRainy = True
 
 #TERRAIN PARAMETERS
 terrRoughCoe = 0.05
@@ -34,7 +36,7 @@ pi = math.pi
 
 #GUST VELOCITY
 def computeGustVelocity(windVelocity, altidude, terrRoughCoe):
-    return windVelocity*(1 + (2.28 / math.log(altidude/terrRoughCoe)))
+    return windVelocity*(1 + (2.28 / log(altidude/terrRoughCoe)))
 
 #COMPUTING INITIAL BEARING
 def computeLongRange(p1, p2):
@@ -184,7 +186,7 @@ def computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction):
 #COMPUTING SLIDESLIP VELOCITY
 def appWindVelocity(vehVelocity, windVelocity, angleWindVeh):
     angle = angleWindVeh()
-    return math.sqrt(((windVelocity + windVelocity * math.cos(toRadians(angle))) ** 2) + (windVelocity * math.sin(toRadians(angle))))
+    return math.sqrt(((vehVelocity + windVelocity * math.cos(toRadians(angle))) ** 2) + (windVelocity * math.sin(toRadians(angle))))
     
 def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe):
     static = computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction)
