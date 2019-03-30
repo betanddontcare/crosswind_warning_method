@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="css/style.comp.css">
+  <link rel="stylesheet" href="css/icon-font.css">
+  <link href="https://fonts.googleapis.com/css?family=Hammersmith+One" rel="stylesheet">
+  <title>Crosswind Warning Method</title>
+</head>
+<body>
+  <div class="viewport">
+    <div class="viewport__bg-video">
+      <video class="viewport__bg-video-content" autoplay muted loop>
+        <source src="/img/Many_Roads.mp4" type="video/mp4">
+        <source src="/img/Many_Roads.webm" type="video/webm"> Your browser is not supported!
+      </video>
+    </div>
+    <div class="main-component">
+      <div class="main-component__side main-component__side--back">
+        <div class="row">
+          <div class="col-1-of-2">
+            <div class="feature-box">
+              <h3 class="secondary-heading u-margin-bottom-sm">
+                SET POINTS LOCATIONS
+              </h3>
+              <div class="search-form">
+                <form>
+                  <input type="text" class="location" id="start">
+                  <button id="startButton"></button>
+                </form>
+                <br>
+                <br>
+                <br>
+                <div class="search-form">
+                  <form>
+                    <input type="text" class="location" id="stop">
+                    <button id="stopButton"></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-1-of-2">
+            <div class="feature-box">
+              <h3 class="secondary-heading u-margin-bottom-sm">
+                Set coefficients
+              </h3>
+              <div class="range-slider u-margin-bottom-sm">
+                <h4 class="discription-heading">
+                  Rolling ressistance coefficient
+                </h4>
+                <input class="range-slider__range" type="range" value="400" min="0" max="500">
+                <span class="range-slider__value">0</span>
+              </div>
+              <div class="range-slider">
+                <h4 class="discription-heading">
+                  Terrain roughness coefficient
+                </h4>
+                <input class="range-slider__range" type="range" value="400" min="0" max="500">
+                <span class="range-slider__value">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-1-of-2 form">
+            <div class="form__group">
+              <input type="number" min="10" max="140" class="form__input" placeholder="Max Velocity [m]" id="max_velocity" required>
+              <label for="height" class="form__label">Max Velocity [m]</label>
+            </div>
+            <div class="form__group">
+              <input type="number" min="1" max="20" class="form__input" placeholder="Front Area [m²]" id="front_area" required>
+              <label for="width" class="form__label">Front Area [m²]</label>
+            </div>
+            <div class="form__group">
+              <input type="number" min="1" max="10" class="form__input" placeholder="Distance Between Axles [m]" id="distance_axles" required>
+              <label for="width" class="form__label">Distance Between Axles [m]</label>
+            </div>
+          </div>
+          <div class="col-1-of-2">
+            <div class="form__group">
+              <input type="number" min="1" max="50" class="form__input" placeholder="Total Weight [t]" id="weight" required>
+              <label for="length" class="form__label">Total Weight [t]</label>
+            </div>
+            <div class="form__group">
+              <input type="number" min="30" max="120" class="form__input" placeholder="Masa [t]" id="weight" required>
+              <label for="weight" class="form__label">Masa [t]</label>
+            </div>
+            <div class="form__group">
+              <input type="number" min="260" max="410" class="form__input" placeholder="Szerokosc [cm]" id="width" required>
+              <label for="width" class="form__label">Szerokosc [cm]</label>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="btn btn--green u-margin-bottom-sm" id="toData">Compute Wind Influence</a>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.viewport {
+    height: 93vh;
+    background-image: linear-gradient( to right bottom, rgba($color-primary-light, 0.8), rgba($color-primary-dark, 0.8));
+    background-size: cover;
+    background-position: top;
+    position: relative;
+    overflow: hidden;
+    transition: all 1s;
+    @include respond(phone) {
+        height: 100vh;
+    }
+    &__bg-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+        opacity: .8;
+        overflow: hidden;
+    }
+    &__bg-video-content {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+}

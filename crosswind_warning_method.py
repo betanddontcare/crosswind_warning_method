@@ -1,15 +1,15 @@
 import math
 from getWeather import *
 from sympy import *
-weatherVars = getVars(lat, lon)
+weatherParams = getWeatherParams(lat, lon)
 
 #WEATHER PARAMETERS
-windVelocity = weatherVars[3]
-windAngle = weatherVars[4]
-totalAirPressure = weatherVars[1]
-temperature = weatherVars[0]
-humidity = weatherVars[2]
-isRainy = True
+windVelocity = weatherParams[3]
+windAngle = weatherParams[4]
+totalAirPressure = weatherParams[1]
+temperature = weatherParams[0]
+humidity = weatherParams[2]
+isRainy = weatherParams[5]
 
 #TERRAIN PARAMETERS
 terrRoughCoe = 0.05
@@ -24,12 +24,12 @@ totalWeight = 5
 frontAxleLoad = 1
 rearAxleLoad = 4
 scaleWeight = 4
-angleOfInclination = 30
-wheelRadius = 0.5
+angleOfInclination = 40
+wheelRadius = 0.7
 
 #LOCATION PARAMETERS
 p1 = [22, 23]
-p2 = [21, 24]
+p2 = [23, 24]
 
 #OTHER VARIABLES
 pi = math.pi
@@ -93,7 +93,7 @@ def computeRearGravity(computeFrontGravity, distanceAxles):
 
 def computeHightGravity(computeFrontGravity, distanceAxles, totalWeight, scaleWeight, angleOfInclination, wheelRadius):
     dist = computeFrontGravity(rearAxleLoad, distanceAxles, totalWeight)
-    inclination = math.tan(angleOfInclination)
+    inclination = math.tan(toRadians(angleOfInclination))
     return ((scaleWeight * distanceAxles - totalWeight * dist) / (totalWeight * inclination)) + wheelRadius
 
 #AERODYNAMIC BAKER's COEFFICIENTS (1988)

@@ -1,0 +1,18 @@
+//GRID
+$grid-width: 114rem;
+$gutter-vertical: 3rem;
+$gutter-horizontal: 3rem;
+$gutter-vertical-sm: 0.5rem;
+$gutter-horizontal-sm: 0.5rem;
+$box-width: (100vw - #{$gutter-horizontal}) / 2;
+//FONTS
+$default-font-size: 1.6rem;
+//COLORS
+$color-primary: rgb(131, 167, 119);
+$color-primary-light: rgb(25, 123, 31);
+$color-primary-dark: rgb(4, 61, 8);
+$color-secondary-light: rgb(117, 180, 132);
+$color-secondary-dark: rgb(148, 179, 104);
+$color-white: rgba(209, 206, 206, 0.946);
+$color-black: rgb(36, 34, 34);
+$color-grey: rgb(83, 80, 80);
