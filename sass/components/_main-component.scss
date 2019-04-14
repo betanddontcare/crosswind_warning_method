@@ -1,12 +1,12 @@
 .main-component {
     @include absCenter;
-    height: 85%;
+    height: 88%;
     width: 75%;
     perspective: 150rem;
     -moz-perspective: 150rem;
     @include respond(tab-port) {
         height: 100%;
-        width: 85%;
+        width: 90%;
     }
     @include respond(phone) {
         height: 100%;

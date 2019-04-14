@@ -17,5 +17,7 @@
   "devDependencies": {
     "node-sass": "^4.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "jquery": "^3.4.0"
+  }
 }

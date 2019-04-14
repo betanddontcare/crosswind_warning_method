@@ -50,6 +50,13 @@ body {
     }
 }
 
+.detail-heading {
+    font-size: 1.3rem;
+    display: block;
+    font-style: italic;
+    float: right; 
+}
+
 .map-heading {
     @include absCenter;
     font-size: 4.5rem;

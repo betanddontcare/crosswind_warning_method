@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css?family=Hammersmith+One" rel="stylesheet">
   <title>Crosswind Warning Method</title>
 </head>
+
 <body>
   <div class="viewport">
     <div class="viewport__bg-video">
@@ -22,12 +24,12 @@
         <div class="row">
           <div class="col-1-of-2">
             <div class="feature-box">
-              <h3 class="secondary-heading u-margin-bottom-sm">
+              <h3 class="secondary-heading u-margin-bottom-md">
                 SET POINTS LOCATIONS
               </h3>
               <div class="search-form">
                 <form>
-                  <input type="text" class="location" id="start">
+                  <input type="text" class="location" id="start" placeholder="Start point e.g. 40 33 21, -12 15 69">
                   <button id="startButton"></button>
                 </form>
                 <br>
@@ -35,7 +37,7 @@
                 <br>
                 <div class="search-form">
                   <form>
-                    <input type="text" class="location" id="stop">
+                    <input type="text" class="location" id="stop" placeholder="Destination point e.g. 39 33 21, -11 15 69">
                     <button id="stopButton"></button>
                   </form>
                 </div>
@@ -51,15 +53,53 @@
                 <h4 class="discription-heading">
                   Rolling ressistance coefficient
                 </h4>
-                <input class="range-slider__range" type="range" value="400" min="0" max="500">
+                <input class="range-slider__range" type="range" value="0.010" min="0.001" max="0.035" step="0.001">
                 <span class="range-slider__value">0</span>
               </div>
               <div class="range-slider">
                 <h4 class="discription-heading">
                   Terrain roughness coefficient
                 </h4>
-                <input class="range-slider__range" type="range" value="400" min="0" max="500">
-                <span class="range-slider__value">0</span>
+                <div class="slidemenu">
+                  <input type="radio" name="menu" id="one" class="menu-one" checked>
+                  <label for="one">
+                    <i>
+                      <img src="/img/calm.png" alt="" />
+                    </i>
+                    <span>Coastal</span>
+                  </label>
+                  <input type="radio" name="menu" id="two" class="menu-two">
+                  <label for="two">
+                    <i>
+                      <img src="/img/field.png" alt="" />
+                    </i>
+                    <span>Plain</span>
+                  </label>
+                  <input type="radio" name="menu" id="three" class="menu-three">
+                  <label for="three">
+                    <i>
+                      <img src="/img/garden.png" alt="" />
+                    </i>
+                    <span>Lowland</span>
+                  </label>
+                  <input type="radio" name="menu" id="four" class="menu-four">
+                  <label for="four">
+                    <i>
+                      <img src="/img/house.png" alt="" />
+                    </i>
+                    <span>Varied</span>
+                  </label>
+                  <input type="radio" name="menu" id="five" class="menu-five">
+                  <label for="five">
+                    <i>
+                      <img src="/img/cityscape.png" alt="" />
+                    </i>
+                    <span>Urban</span>
+                  </label>
+                  <div class="slider">
+                    <div class="bar"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -67,30 +107,38 @@
         <div class="row">
           <div class="col-1-of-2 form">
             <div class="form__group">
-              <input type="number" min="10" max="140" class="form__input" placeholder="Max Velocity [m]" id="max_velocity" required>
-              <label for="height" class="form__label">Max Velocity [m]</label>
+              <input type="number" min="10" max="140" class="form__input" placeholder="Max Velocity [km/h]" id="max_velocity" required>
+              <label for="max_velocity" class="form__label">Max Velocity [km/h]</label>
             </div>
             <div class="form__group">
               <input type="number" min="1" max="20" class="form__input" placeholder="Front Area [m²]" id="front_area" required>
-              <label for="width" class="form__label">Front Area [m²]</label>
+              <label for="front_area" class="form__label">Front Area [m²]</label>
             </div>
             <div class="form__group">
               <input type="number" min="1" max="10" class="form__input" placeholder="Distance Between Axles [m]" id="distance_axles" required>
-              <label for="width" class="form__label">Distance Between Axles [m]</label>
+              <label for="distance_axles" class="form__label">Distance Between Axles [m]</label>
+            </div>
+            <div class="form__group">
+              <input type="number" min="0" max="140" class="form__input" placeholder="Front Axle Load [t]" id="front_axle_load" required>
+              <label for="front_axle_load" class="form__label">Front Axle Load [t]</label>
             </div>
           </div>
           <div class="col-1-of-2">
             <div class="form__group">
               <input type="number" min="1" max="50" class="form__input" placeholder="Total Weight [t]" id="weight" required>
-              <label for="length" class="form__label">Total Weight [t]</label>
+              <label for="weight" class="form__label">Total Weight [t]</label>
             </div>
             <div class="form__group">
-              <input type="number" min="30" max="120" class="form__input" placeholder="Masa [t]" id="weight" required>
-              <label for="weight" class="form__label">Masa [t]</label>
+              <input type="number" min="0" max="2" class="form__input" placeholder="Wheel Radius [m]" id="wheel_radius" required>
+              <label for="wheel_radius" class="form__label">Wheel Radius [m]</label>
             </div>
             <div class="form__group">
-              <input type="number" min="260" max="410" class="form__input" placeholder="Szerokosc [cm]" id="width" required>
-              <label for="width" class="form__label">Szerokosc [cm]</label>
+              <input type="number" min="0" max="2000" class="form__input" placeholder="Altitude [m]" id="altitude" required>
+              <label for="altitude" class="form__label">Altitude [m]</label>
+            </div>
+            <div class="form__group">
+              <input type="number" min="0" max="140" class="form__input" placeholder="Rear Axle Load [t]" id="rear_axle_load" required>
+              <label for="rear_axle_load" class="form__label">Rear Axle Load [t]</label>
             </div>
           </div>
         </div>
@@ -99,6 +147,9 @@
     </div>
   </div>
   </div>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="/app.js"></script>
+  <div class="detail-heading">Created by Igor Betkier</div>
 </body>
+
 </html>

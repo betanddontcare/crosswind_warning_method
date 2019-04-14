@@ -1,0 +1,150 @@
+/*slidemenu */
+.slidemenu {
+    margin:0 auto;
+    line-height: 0rem !important;
+}
+
+.slidemenu:after {
+    content:"";
+    display:table;
+    clear:both
+}
+
+.slidemenu label {
+    width:20%;
+    float:left;
+    box-sizing:border-box;
+    text-align:center;
+    padding:15px;
+    opacity:.5;
+    -webkit-transition:all .15s ease-out;
+    -moz-transition:all .15s ease-out;
+    transition:all .15s ease-out;
+    font-size:12px;
+    font-weight:600
+}
+
+.slidemenu label i {
+    height:35px;
+    width:35px;
+    display:block;
+    margin:0 auto 10px
+}
+
+.slidemenu label:hover {
+    cursor:pointer;
+    opacity:.7
+}
+
+.slidemenu .slider {
+    background:$color-primary;
+    height:5px;
+    border-radius:5px;
+    clear:both
+}
+
+.slidemenu .slider .bar {
+    background:rgb(3, 75, 23);
+    height:5px;
+    width:20%;
+    border-radius:5px;
+    margin-left:0;
+    -webkit-transition:all .15s ease-in-out;
+    -moz-transition:all .15s ease-in-out;
+    transition:all .15s ease-in-out
+}
+
+.slidemenu input[type="radio"] {
+    display:none
+}
+
+.slidemenu .menu-one:checked ~ .slider .bar {
+    margin-left:0
+}
+
+.slidemenu .menu-two:checked ~ .slider .bar {
+    margin-left:20%
+}
+
+.slidemenu .menu-three:checked ~ .slider .bar {
+    margin-left:40%
+}
+
+.slidemenu .menu-four:checked ~ .slider .bar {
+    margin-left:60%
+}
+
+.slidemenu .menu-five:checked ~ .slider .bar {
+    margin-left:80%
+}
+
+.slidemenu .menu-one:checked + label {
+    opacity:1
+}
+
+.slidemenu .menu-two:checked + label {
+    opacity:1
+}
+
+.slidemenu .menu-three:checked + label {
+    opacity:1
+}
+
+.slidemenu .menu-four:checked + label {
+    opacity:1
+}
+
+.slidemenu .menu-five:checked + label {
+    opacity:1
+}
+
+@media screen and (max-width: 780px) {
+.slidemenu {
+    width:90%
+}
+}
+
+@media screen and (max-width: 780px) and (max-width: 500px) {
+.slidemenu label span {
+    display:none
+}
+}
+
+@media screen and (max-width: 780px) and (max-width: 500px) {
+.slidemenu label {
+    padding-bottom:0
+}
+}
+
+/*Colors*/
+
+.blue label span{
+  color: #0090da;
+}
+
+.blue .slider .bar{
+  background: #0090da;
+}
+
+/*Colors*/
+
+.blue label span{
+  color: #5fae42;
+}
+
+.blue .slider .bar{
+  background: #5fae42;
+}
+
+.section-title{
+  text-transform: uppercase;
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 50px;
+}
+
+.grey{
+  background: #f4f4f4;
+  border-top:1px dotted #ccc;
+  padding: 50px 0;
+}
