@@ -1,8 +1,17 @@
 import math
 from getWeather import *
 from sympy import *
-from app import data
 weatherParams = getWeatherParams(lat, lon)
+
+vehVelocity = 10
+frontArea = 10
+distanceAxles = 5
+frontAxleLoad = 1
+totalWeight = 5
+wheelRadius = 1 
+rearAxleLoad = 4  
+scaleWeight = 4
+angleOfInclination = 40
 
 #WEATHER PARAMETERS
 windVelocity = weatherParams[3]
@@ -14,19 +23,8 @@ isRainy = weatherParams[5]
 
 #TERRAIN PARAMETERS
 terrRoughCoe = 0.05
-altidude = 100
 rollingResistanceCoe = 0.014
-
-#VEHCICLE PARAMETERS
-vehVelocity = 10
-frontArea = 11
-distanceAxles = 5
-totalWeight = 5
-frontAxleLoad = 1
-rearAxleLoad = 4
-scaleWeight = 4
-angleOfInclination = 40
-wheelRadius = 0.7
+altitude = 100
 
 #LOCATION PARAMETERS
 p1 = [22, 23]
@@ -36,8 +34,8 @@ p2 = [23, 24]
 pi = math.pi
 
 #GUST VELOCITY
-def computeGustVelocity(windVelocity, altidude, terrRoughCoe):
-    return windVelocity*(1 + (2.28 / log(altidude/terrRoughCoe)))
+def computeGustVelocity(altitude):
+    return windVelocity*(1 + (2.28 / log(altitude/terrRoughCoe)))
 
 #COMPUTING INITIAL BEARING
 def computeLongRange(p1, p2):
@@ -217,3 +215,4 @@ def toKelvin(temp):
     return temp + 273.15
 
 velocitiesRatio(appWindVelocity, computeSlideSlipVel)
+    

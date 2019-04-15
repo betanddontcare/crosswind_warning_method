@@ -25,3 +25,18 @@
         object-fit: cover;
     }
 }
+
+.loader-opa {
+    opacity: 0;
+}
+.loader {
+    height: 100%;
+    width: 100%;
+    background-color: $color-primary-light;
+    z-index: 999;
+    background-size: cover;
+    background-position: top;
+    position: relative;
+    opacity: 1;
+    transition-duration: 2s;
+}

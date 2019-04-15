@@ -13,6 +13,17 @@
 
 <body>
   <div class="viewport">
+    <div class="loader-opa">
+      <div class="loop-wrapper">
+        <div class="mountain"></div>
+        <div class="hill"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="tree"></div>
+        <div class="truck"></div>
+        <div class="wheels"></div>
+      </div>
+    </div>
     <div class="viewport__bg-video">
       <video class="viewport__bg-video-content" autoplay muted loop>
         <source src="/img/Many_Roads.mp4" type="video/mp4">
@@ -53,7 +64,7 @@
                 <h4 class="discription-heading">
                   Rolling ressistance coefficient
                 </h4>
-                <input class="range-slider__range" type="range" value="0.010" min="0.001" max="0.035" step="0.001">
+                <input class="range-slider__range" id="resCoe" type="range" value="0.010" min="0.001" max="0.035" step="0.001">
                 <span class="range-slider__value">0</span>
               </div>
               <div class="range-slider">
@@ -61,35 +72,35 @@
                   Terrain roughness coefficient
                 </h4>
                 <div class="slidemenu">
-                  <input type="radio" name="menu" id="one" class="menu-one" checked>
+                  <input type="radio" name="menu" id="one" class="menu-one" value="coastal" checked>
                   <label for="one">
                     <i>
                       <img src="/img/calm.png" alt="" />
                     </i>
                     <span>Coastal</span>
                   </label>
-                  <input type="radio" name="menu" id="two" class="menu-two">
+                  <input type="radio" name="menu" id="two" class="menu-two" value="plain">
                   <label for="two">
                     <i>
                       <img src="/img/field.png" alt="" />
                     </i>
                     <span>Plain</span>
                   </label>
-                  <input type="radio" name="menu" id="three" class="menu-three">
+                  <input type="radio" name="menu" id="three" class="menu-three" value="lowland">
                   <label for="three">
                     <i>
                       <img src="/img/garden.png" alt="" />
                     </i>
                     <span>Lowland</span>
                   </label>
-                  <input type="radio" name="menu" id="four" class="menu-four">
+                  <input type="radio" name="menu" id="four" class="menu-four" value="varied">
                   <label for="four">
                     <i>
                       <img src="/img/house.png" alt="" />
                     </i>
                     <span>Varied</span>
                   </label>
-                  <input type="radio" name="menu" id="five" class="menu-five">
+                  <input type="radio" name="menu" id="five" class="menu-five" value="urban">
                   <label for="five">
                     <i>
                       <img src="/img/cityscape.png" alt="" />

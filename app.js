@@ -13,6 +13,7 @@ stopButton.addEventListener('click', function (e) {
     stopDiv.parentElement.classList.toggle('active');
 })
 computeButton.addEventListener('click', function (e) {
+    let loader = document.querySelector('.loader-opa');
     let max_velocity = document.querySelector('#max_velocity').value;
     let front_area = document.querySelector('#front_area').value;
     let distance_axles = document.querySelector('#distance_axles').value;
@@ -23,7 +24,10 @@ computeButton.addEventListener('click', function (e) {
     let rear_axle_load = document.querySelector('#rear_axle_load').value;
     let start = document.querySelector('#start').value;
     let stop = document.querySelector('#stop').value;
+    let radio = document.querySelector('input[name="menu"]:checked').value;
+    let resCoe = document.querySelector('#resCoe').value;
     e.preventDefault();
+    loader.className = 'loader';
     fetch('http://127.0.0.1:8000/', {
         method: 'POST',
         headers: {
@@ -31,8 +35,6 @@ computeButton.addEventListener('click', function (e) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "start": start,
-            "stop": stop,
             "max_velocity": max_velocity,
             "front_area": front_area,
             "distance_axles": distance_axles,
@@ -40,7 +42,11 @@ computeButton.addEventListener('click', function (e) {
             "weight": weight,
             "wheel_radius": wheel_radius,
             "altitude": altitude,
-            "rear_axle_load": rear_axle_load
+            "rear_axle_load": rear_axle_load,
+            "start" : start,
+            "stop": stop,
+            "radio" : radio,
+            "resCoe" : resCoe   
         })
     }).then(res => res.json()).then(res => console.log(res));
 })
