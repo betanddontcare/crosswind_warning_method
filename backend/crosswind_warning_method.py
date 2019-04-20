@@ -1,34 +1,38 @@
 import math
 from getWeather import *
 from sympy import *
-weatherParams = getWeatherParams(lat, lon)
 
-vehVelocity = 10
-frontArea = 10
-distanceAxles = 5
-frontAxleLoad = 1
-totalWeight = 5
-wheelRadius = 1 
-rearAxleLoad = 4  
+vehVelocity = frontArea = distanceAxles = frontAxleLoad = totalWeight = wheelRadius = altitude = rearAxleLoad = terrRoughCoe = rollingResistanceCoe = windVelocity = windAngle = totalAirPressure = temperature = humidity = 0
+p1 = p2 = weatherParams = []
+isRainy = True
+
+def compute(request_data):
+    global vehVelocity, frontArea, distanceAxles, frontAxleLoad, totalWeight, wheelRadius, altitude, rearAxleLoad, p1, p2, terrRoughCoe, rollingResistanceCoe, weatherParams, windVelocity, windAngle, totalAirPressure, temperature, humidity, isRainy
+
+    vehVelocity = toMetersPerSec(request_data['max_velocity'])
+    frontArea = request_data['front_area']
+    distanceAxles = request_data['distance_axles']
+    frontAxleLoad = request_data['front_axle_load']
+    totalWeight = request_data['weight']
+    wheelRadius = request_data['wheel_radius']
+    altitude = request_data['altitude']
+    rearAxleLoad = request_data['rear_axle_load']
+    p1 = [request_data['start'][0], request_data['start'][1]]
+    p2 = [request_data['stop'][0], request_data['stop'][1]]
+    terrRoughCoe = request_data['rough']
+    rollingResistanceCoe = request_data['resCoe']
+    weatherParams = getWeatherParams(request_data['start'][0], request_data['start'][1])
+    windVelocity = weatherParams[3]
+    windAngle = weatherParams[4]
+    totalAirPressure = weatherParams[1]
+    temperature = weatherParams[0]
+    humidity = weatherParams[2]
+    isRainy = weatherParams[5]
+    score = velocitiesRatio(appWindVelocity, computeSlideSlipVel)
+    return score
+
 scaleWeight = 4
 angleOfInclination = 40
-
-#WEATHER PARAMETERS
-windVelocity = weatherParams[3]
-windAngle = weatherParams[4]
-totalAirPressure = weatherParams[1]
-temperature = weatherParams[0]
-humidity = weatherParams[2]
-isRainy = weatherParams[5]
-
-#TERRAIN PARAMETERS
-terrRoughCoe = 0.05
-rollingResistanceCoe = 0.014
-altitude = 100
-
-#LOCATION PARAMETERS
-p1 = [22, 23]
-p2 = [23, 24]
 
 #OTHER VARIABLES
 pi = math.pi
@@ -200,9 +204,10 @@ def velocitiesRatio(appWindVelocity, computeSlideSlipVel):
     appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
     slideslipVel = computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe)
     if appWindVel / slideslipVel >= 1:
-        print('ALERT! You might loss stability!', round(appWindVel / slideslipVel, 2))
+        return round(appWindVel / slideslipVel, 2)
+        
     else:
-        print('YOU\'RE SAFE!', round(appWindVel / slideslipVel, 2))
+        return round(appWindVel / slideslipVel, 2)
 
 #CALCULATORS OF UNITS
 def toDegrees(num):
@@ -214,5 +219,6 @@ def toRadians(num):
 def toKelvin(temp):
     return temp + 273.15
 
-velocitiesRatio(appWindVelocity, computeSlideSlipVel)
+def toMetersPerSec(kmh):
+    return kmh * 1000 / 3600
     

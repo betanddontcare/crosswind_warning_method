@@ -1,7 +1,4 @@
 import requests
-lat = 55
-lon = 60
-
 def getWeatherParams(lat, lon):
     data = requests.get('http://api.openweathermap.org/data/2.5/weather?lat=' + str(lat) + '&lon=' + str(lon) + '&appid=4699786fb181c4f7c55e919dbee7b6f0').json()
     temperature = data['main']['temp'] - 273.15
