@@ -61,7 +61,11 @@ computeButton.addEventListener('click', function (e) {
             "rough" : roughCoe(rough),
             "resCoe" : resCoe   
         })
-    }).then(res => res.json()).then(res => console.log(res));
+    }).then(res => res.json()).then(res => {
+        const ratio = res.result;
+        document.querySelector('#result-value').textContent = 'Ratio: ' + ratio;
+        document.querySelector('#result-status').textContent = ratio >= 1 ? 'ALERT: You may lose stability!' : 'Safe to travel.';
+    });
     setTimeout(stopLoader, 5000);
     setTimeout(reverse, 6000);
 })
@@ -104,7 +108,7 @@ let roughCoe = function(coe) {
 
 let parseCoords = function(coords) {
     return coords.split(',').map(a => {
-        return parseInt(a, 10);
+        return parseFloat(a);
     });
 }
 
