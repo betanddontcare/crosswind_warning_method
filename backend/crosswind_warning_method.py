@@ -1,6 +1,5 @@
 import math
 from getWeather import *
-from sympy import *
 
 vehVelocity = frontArea = distanceAxles = frontAxleLoad = totalWeight = wheelRadius = altitude = rearAxleLoad = terrRoughCoe = rollingResistanceCoe = windVelocity = windAngle = totalAirPressure = temperature = humidity = 0
 p1 = p2 = weatherParams = []
@@ -39,7 +38,7 @@ pi = math.pi
 
 #GUST VELOCITY
 def computeGustVelocity(altitude):
-    return windVelocity*(1 + (2.28 / log(altitude/terrRoughCoe)))
+    return windVelocity*(1 + (2.28 / math.log(altitude/terrRoughCoe)))
 
 #COMPUTING INITIAL BEARING
 def computeLongRange(p1, p2):
@@ -114,35 +113,35 @@ def computeSideCoe(computeAeroAngle):
 def computeLiftCoe(computeAeroAngle):
     angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
     if angle > 0 and angle <= pi / 2:
-        return 1.1 * (1 - trigsimp(cos(angle) ** 4))          
+        return 1.1 * (1 - math.cos(angle) ** 4)
     elif angle > pi / 2 and angle <= pi:
-        return 1.1 * (1 - trigsimp(cos(pi - angle) ** 4)) 
+        return 1.1 * (1 - math.cos(pi - angle) ** 4)
     elif angle > pi and angle <= 3 * pi / 2:
-        return 1.1 * (1 - trigsimp(cos(angle - pi) ** 4)) 
+        return 1.1 * (1 - math.cos(angle - pi) ** 4)
     elif angle > 3 * pi / 2 and angle <= 2 * pi:
-        return 1.1 * (1 - trigsimp(cos(2 * pi - angle) ** 4)) 
+        return 1.1 * (1 - math.cos(2 * pi - angle) ** 4)
 
 def computeDragCoe(computeAeroAngle):
     angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
     if angle > 0 and angle <= pi / 2:
-        return -0.5 * (1 + trigsimp(sin(angle) ** 3))
+        return -0.5 * (1 + math.sin(angle) ** 3)
     elif angle > pi / 2 and angle <= pi:
-        return 0.5 * (1 + trigsimp(sin(pi - angle) ** 3))
+        return 0.5 * (1 + math.sin(pi - angle) ** 3)
     elif angle > pi and angle <= 3 * pi / 2:
-        return 0.5 * (1 + trigsimp(sin(angle - pi) ** 3))
+        return 0.5 * (1 + math.sin(angle - pi) ** 3)
     elif angle > 3 * pi / 2 and angle <= 2 * pi:
-        return -0.5 * (1 + trigsimp(sin(2 * pi - angle) ** 3))
+        return -0.5 * (1 + math.sin(2 * pi - angle) ** 3)
 
 def computePitchingCoe(computeAeroAngle):
     angle = toRadians(computeAeroAngle(computeGustVelocity, vehVelocity, angleWindVeh, computeVehAngle, windAngle))
     if angle > 0 and angle <= pi / 2:
-        return -2 * (1 - trigsimp(cos(angle) ** 2))
+        return -2 * (1 - math.cos(angle) ** 2)
     elif angle > pi / 2 and angle <= pi:
-        return 2 * (1 - trigsimp(cos(pi - angle) ** 2))
+        return 2 * (1 - math.cos(pi - angle) ** 2)
     elif angle > pi and angle <= 3 * pi / 2:
-        return 2 * (1 - trigsimp(cos(angle - pi) ** 2))
+        return 2 * (1 - math.cos(angle - pi) ** 2)
     elif angle > 3 * pi / 2 and angle <= 2 * pi:
-        return -2 * (1 - trigsimp(cos(2 * pi - angle) ** 2))
+        return -2 * (1 - math.cos(2 * pi - angle) ** 2)
     
 #FORCES AND MOMENTS
 #Newton unit!
@@ -189,7 +188,7 @@ def computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction):
 #COMPUTING SLIDESLIP VELOCITY
 def appWindVelocity(vehVelocity, windVelocity, angleWindVeh):
     angle = angleWindVeh()
-    return math.sqrt(((vehVelocity + windVelocity * math.cos(toRadians(angle))) ** 2) + (windVelocity * math.sin(toRadians(angle))))
+    return math.sqrt(((vehVelocity + windVelocity * math.cos(toRadians(angle))) ** 2) + (windVelocity * math.sin(toRadians(angle))) ** 2)
     
 def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe):
     static = computeFrictionCoePerAxle(staticFriction, rollingResistanceCoe, traction)
@@ -203,11 +202,7 @@ def computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, fr
 def velocitiesRatio(appWindVelocity, computeSlideSlipVel):
     appWindVel = appWindVelocity(vehVelocity, windVelocity, angleWindVeh)
     slideslipVel = computeSlideSlipVel(totalWeight, computeFrontGravity, computeRearGravity, frontArea, computeAirDensity, computeSideCoe, computeFrictionCoePerAxle, computeLiftCoe)
-    if appWindVel / slideslipVel >= 1:
-        return round(appWindVel / slideslipVel, 2)
-        
-    else:
-        return round(appWindVel / slideslipVel, 2)
+    return round(appWindVel / slideslipVel, 2)
 
 #CALCULATORS OF UNITS
 def toDegrees(num):
